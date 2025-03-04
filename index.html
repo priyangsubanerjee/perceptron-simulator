@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://priyangsubanerjee.github.io/device-fingerprinting/assets/priyangsu-avatar.svg" type="image/svg+xml" />
+    <title>Perceptron Simulator: Visualize Single Layer Neural Networks</title>
+    <meta
+      name="description"
+      content="Learn the basics of neural networks with a visual perceptron simulator. Adjust weights and inputs to see how a single layer perceptron operates. Interactive and educational."
+    />
+    <meta name="author" content="Priyangsu" />
+    <style>
+      * {
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        text-align: center;
+        font-family: Arial, sans-serif;
+        padding-top: 40px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+      }
+
+      button {
+        padding: 4px 8px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 40px);
+        gap: 5px;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .cell {
+        width: 40px;
+        height: 40px;
+        background: #eaeaea;
+        border-radius: 50px;
+        cursor: pointer;
+      }
+      .on {
+        background: red;
+      }
+      .bias-grid {
+        display: grid;
+        grid-template-columns: repeat(4, auto);
+        gap: 20px 60px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .bias-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 40px;
+        border: 1px solid #a7a7a7;
+        border-radius: 60px;
+        gap: 5px;
+      }
+      .bias-value {
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+        font-size: 15px;
+      }
+      .bias-button {
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        flex-shrink: 0;
+        border: none;
+        background: #eaeaea;
+        color: #333;
+        border-radius: 60px;
+        font-size: 16px;
+      }
+      .highlight {
+        background: lightblue;
+      }
+      .para {
+        font-size: 16px;
+        font-family: serif;
+        line-height: 1.7;
+      }
+      #potentiometer {
+        width: 200px;
+        height: 20px;
+        background: linear-gradient(to right, blue, white, red);
+        margin: 0px auto;
+        margin-top: 20px;
+        position: relative;
+      }
+      #needle {
+        position: absolute;
+        top: -5px;
+        width: 2px;
+        height: 30px;
+        background: black;
+        left: 50%;
+        transform: translateX(-1px);
+      }
+      #potvalue {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <h2>Perceptron Simulator</h2>
+      <p style="margin-top: 10px" class="para">
+        Click on the cells to turn them on or off. Adjust the bias of each cell to see how it affects the output of the perceptron.
+      </p>
+      <br />
+      <br />
+      <br />
+      <div style="display: flex; justify-content: center; gap: 80px; flex-wrap: wrap">
+        <div style="max-width: 450px">
+          <h4>Input matrix</h4>
+          <p style="margin-top: 10px" class="para">Create shapes / alphabets / numbers by turning on the cells.</p>
+          <br />
+          <div>
+            <button id="turnOffAll">Turn Off All</button>
+            <button id="turnOnAll">Turn On All</button>
+            <a href="/">
+              <button>Reload</button>
+            </a>
+          </div>
+          <br />
+          <div class="grid" id="matrix"></div>
+          <br />
+          <br />
+        </div>
+        <div style="max-width: 450px">
+          <h4>Bias Adjustment</h4>
+          <p style="margin-top: 10px" class="para">Adjust the bias of corresponding cell to make the perceptron learn.</p>
+          <br />
+          <div>
+            <button id="trainForNegative">Auto train for negative</button>
+            <button id="trainForPositive">Auto train for positive</button>
+          </div>
+          <div class="bias-grid" id="bias-matrix"></div>
+          <br />
+          <br />
+          <div id="potentiometer">
+            <div id="needle"></div>
+          </div>
+          <br />
+          <p id="potvalue">0</p>
+        </div>
+      </div>
+
+      <div style="width: 100%; text-align: left; background-color: whitesmoke; padding: 20px; line-height: 1.4; margin-top: 50px">
+        <h3>Single Layer Perceptron Explanation</h3>
+
+        <p style="margin-top: 6px; font-size: 16px; line-height: 1.6">
+          This Perceptron Simulator is a visual and interactive representation of a simplified Single Layer Perceptron. A Single Layer Perceptron is
+          one of the oldest and most fundamental neural network models, originally proposed by Frank Rosenblatt in 1958. It's primarily used for
+          binary classification tasks, effectively computing logical gates like AND, OR, and NOR.
+        </p>
+        <br />
+
+        <h3>Core Functionality of a Single Layer Perceptron (as Simulated)</h3>
+
+        <ul style="margin-left: 20px; margin-top: 10px">
+          <li style="margin-top: 5px">
+            <strong>Inputs (Cells):</strong> The 4x4 grid of cells represents the input layer. Each cell's "on" or "off" state corresponds to a binary
+            input (1 or 0).
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Weights (Biases):</strong> The adjustable bias values associated with each cell are the "weights" of the perceptron. These weights
+            determine the influence of each input on the output.
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Weighted Sum:</strong> The <code>updatePotentiometer()</code> function calculates the weighted sum of the inputs. When a cell is
+            "on," its bias (weight) is added to the sum. When it is off, the bias is subtracted. This is a form of weighted summation.
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Activation Function (Simplified):</strong> In this simulation, the potentiometer's needle position acts as a simplified, linear
+            representation of the activation function's output. The clamping of the needle position, acts as a very rough simulation of a non linear
+            activation function. The on/off status of the leds, acts as a step activation function.
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Output (Potentiometer):</strong> The potentiometer's position visually displays the output of the perceptron, which is the result
+            of the weighted sum (with a simplified activation).
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Training (Auto-Training Buttons):</strong> The train buttons simulate a basic type of training. By adjusting the weights (biases)
+            based on the desired output direction (positive or negative), a simplified form of weight adjustment is performed, similar to perceptron
+            learning.
+          </li>
+        </ul>
+
+        <br />
+        <h3>Key Concepts Demonstrated by This Simulation</h3>
+
+        <ul style="margin-left: 20px; margin-top: 10px">
+          <li>
+            <strong>Linear Separability:</strong> This simulation demonstrates how different combinations of inputs and weights can produce varying
+            outputs.
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Weight Adjustment:</strong> The bias adjustments show how changing the weights alters the perceptron's output.
+          </li>
+          <li style="margin-top: 10px">
+            <strong>Simplified Model:</strong> It's important to note that this simulation is a simplified model. A real-world perceptron would
+            typically involve more complex activation functions and training algorithms.
+          </li>
+        </ul>
+        <br />
+
+        <h3>Relation to MNIST Dataset</h3>
+
+        <p style="margin-top: 5px">
+          While this simulation uses a 4x4 grid, the MNIST dataset involves 28x28 pixel images. A single-layer perceptron could be used to classify
+          MNIST digits, but it would require a much larger input layer (784 inputs) and more sophisticated training. However, single layer perceptrons
+          are limited to linearly seperable problems, and therefore have very limited use cases with complex datasets like MNIST.
+        </p>
+        <p style="margin-top: 5px">
+          In summary, this simulator provides a valuable visual and interactive way to understand the fundamental building blocks of a single-layer
+          perceptron. It effectively demonstrates the concepts of inputs, weights, weighted sums, and simplified activation.
+        </p>
+        <br />
+        <br />
+        <p style="font-size: 15px">
+          This project was developed by <strong>Priyangsu Banerjee</strong>.<br />
+          Source Code: <a href="[Your Source Code Link]">View on GitHub</a><br />
+          Connect with me: <a href="[Your LinkedIn Link]">LinkedIn</a> | <a href="[Your Twitter/X Link]">Twitter/X</a> |
+          <a href="[Your Other Social Link]">Other Social Link</a><br />
+          Last updated: 05.03.2025<br />
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const matrix = document.getElementById("matrix");
+      const biasMatrix = document.getElementById("bias-matrix");
+      const potvalue = document.getElementById("potvalue");
+      const trainNegativeBtn = document.getElementById("trainForNegative");
+      const trainPositiveBtn = document.getElementById("trainForPositive");
+      const turnOffAllBtn = document.getElementById("turnOffAll");
+      const turnOnAllBtn = document.getElementById("turnOnAll");
+      let learning_rate = 10;
+      const cells = [];
+      let firstSelected = null;
+      let shiftPressed = false;
+      let biases = new Array(16).fill(0);
+      const needle = document.getElementById("needle");
+      const potentiometer = document.getElementById("potentiometer");
+
+      trainNegativeBtn.addEventListener("click", () => {
+        autoTrain("negative");
+      });
+
+      trainPositiveBtn.addEventListener("click", () => {
+        autoTrain("positive");
+      });
+
+      turnOffAllBtn.addEventListener("click", () => {
+        turnOffAll();
+        updatePotentiometer();
+      });
+
+      turnOnAllBtn.addEventListener("click", () => {
+        turnOnAll();
+        updatePotentiometer();
+      });
+
+      for (let i = 0; i < 16; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        cell.dataset.index = i;
+        cell.addEventListener("click", (e) => handleCellClick(e, i));
+        cell.addEventListener("mouseover", () => highlightBias(i));
+        cell.addEventListener("mouseout", () => removeHighlight(i));
+        cell.dataset.index = i;
+        matrix.appendChild(cell);
+        cells.push(cell);
+
+        const biasContainer = document.createElement("div");
+        biasContainer.classList.add("bias-container");
+        biasContainer.addEventListener("mouseover", () => highlightLed(i));
+        biasContainer.addEventListener("mouseout", () => removeHighlightLed(i));
+        biasContainer.dataset.index = i;
+
+        const minusButton = document.createElement("button");
+        minusButton.textContent = "-";
+        minusButton.classList.add("bias-button");
+        minusButton.addEventListener("click", () => adjustBias(i, -learning_rate));
+
+        const biasValue = document.createElement("span");
+        biasValue.textContent = biases[i];
+        biasValue.classList.add("bias-value");
+        biasValue.dataset.index = i;
+
+        const plusButton = document.createElement("button");
+        plusButton.textContent = "+";
+        plusButton.classList.add("bias-button");
+        plusButton.addEventListener("click", () => adjustBias(i, learning_rate));
+
+        biasContainer.appendChild(minusButton);
+        biasContainer.appendChild(biasValue);
+        biasContainer.appendChild(plusButton);
+        biasMatrix.appendChild(biasContainer);
+      }
+
+      function turnOffAll() {
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].classList.remove("on");
+        }
+      }
+
+      function turnOnAll() {
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].classList.add("on");
+        }
+      }
+
+      function handleCellClick(e, index) {
+        cells[index].classList.toggle("on");
+        updatePotentiometer();
+      }
+
+      function highlightBias(index) {
+        document.querySelector(`.bias-container[data-index='${index}']`).classList.add("highlight");
+      }
+
+      function removeHighlight(index) {
+        document.querySelector(`.bias-container[data-index='${index}']`).classList.remove("highlight");
+      }
+
+      function highlightLed(index) {
+        document.querySelector(`.cell[data-index='${index}']`).classList.add("highlight");
+      }
+
+      function removeHighlightLed(index) {
+        document.querySelector(`.cell[data-index='${index}']`).classList.remove("highlight");
+      }
+
+      function adjustBias(index, change) {
+        biases[index] += change;
+        document.querySelector(`.bias-value[data-index='${index}']`).textContent = biases[index];
+        updatePotentiometer();
+      }
+
+      function updatePotentiometer() {
+        let output = 0;
+        let cells_on = document.querySelectorAll(".on");
+
+        if (cells_on.length > 0) {
+          for (let i = 0; i < biases.length; i++) {
+            if (cells[i].classList.contains("on")) {
+              output += biases[i]; // Current flows in the "normal" direction
+            } else {
+              output -= biases[i]; // Current flows in the "reversed" direction
+            }
+          }
+
+          if (output === 0) {
+            needle.style.left = "50%";
+            potvalue.textContent = output;
+          } else {
+            const potWidth = potentiometer.offsetWidth;
+            const maxAbsOutput = 500; // Adjust for scaling
+            const needlePosition = (output / maxAbsOutput) * (potWidth / 2) + potWidth / 2;
+            const clampedPosition = Math.max(0, Math.min(potWidth, needlePosition));
+            needle.style.left = `${clampedPosition}px`;
+            potvalue.textContent = output;
+          }
+        } else {
+          needle.style.left = "50%";
+          potvalue.textContent = output;
+        }
+      }
+
+      function autoTrain(type) {
+        const cells_on = document.querySelectorAll(".on");
+        if (cells_on.length > 0) {
+          for (let i = 0; i < cells.length; i++) {
+            if (cells[i].classList.contains("on") && type === "negative") {
+              adjustBias(i, -learning_rate);
+            } else if (!cells[i].classList.contains("on") && type === "negative") {
+              adjustBias(i, learning_rate);
+            } else if (cells[i].classList.contains("on") && type === "positive") {
+              adjustBias(i, learning_rate);
+            } else if (!cells[i].classList.contains("on") && type === "positive") {
+              adjustBias(i, -learning_rate);
+            }
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
