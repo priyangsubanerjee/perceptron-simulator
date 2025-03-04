@@ -1,7 +1,7 @@
 ---
 Project: "Perceptron Simulator"
 Author: "Priyangsu"
-Published: "25 Feb 2025"
+Published: "05 Mar 2025"
 ---
 
 ## Perceptron Simulator
@@ -42,7 +42,7 @@ While this simulator uses a 4x4 grid, datasets like MNIST require much larger in
 ### Live Demo
 
 You can try the **Perceptron Simulator** live at:
-[View Live]([Your Live Demo Link])
+[View Live]([https://priyangsubanerjee.github.io/perceptron-simulator/])
 
 ### Author
 
@@ -52,4 +52,4 @@ For contributions, discussions, or concerns, feel free to open an issue or contr
 
 Source Code: [View on GitHub]([Your Source Code Link])
 
-Connect with me: [LinkedIn]([Your LinkedIn Link]) | [Twitter/X]([Your Twitter/X Link]) | [Other Social Link]([Your Other Social Link])
+Connect with me:[Website](https://priyangsu.dev) | [Github](https://github.com/priyangsubanerjee)
