@@ -41,8 +41,7 @@ While this simulator uses a 4x4 grid, datasets like MNIST require much larger in
 
 ### Live Demo
 
-You can try the **Perceptron Simulator** live at:
-[View Live](https://priyangsubanerjee.github.io/perceptron-simulator/)
+You can try the **Perceptron Simulator** live at: [View Live](https://priyangsubanerjee.github.io/perceptron-simulator/)
 
 ### Author
 
