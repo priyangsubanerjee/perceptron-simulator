@@ -49,6 +49,4 @@ Developed by **[@priyangsubanerjee](https://github.com/priyangsubanerjee)**, thi
 
 For contributions, discussions, or concerns, feel free to open an issue or contribute to the repository.
 
-Source Code: [View on GitHub]([Your Source Code Link])
-
 Connect with me: [Website](https://priyangsu.dev) | [Github](https://github.com/priyangsubanerjee)
